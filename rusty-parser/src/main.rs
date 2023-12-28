@@ -1,6 +1,15 @@
 use std::{io::{self, stdin, Read}, error};
-
 const VALID_CHARS: &str = "0123456789+-*/() ";
+
+#[derive(Debug, Clone)]
+pub enum GrammarItem {
+    Product,
+    Sum,
+    Minus,
+    Divide,
+    Number(u64),
+    Paren
+}
 
 fn main() {
     let mut input = String::new();
@@ -14,7 +23,6 @@ fn main() {
         }
     }
     println!("Hello, world!");
-
 }
 
 fn clean_input(input: &String) {
