@@ -37,3 +37,20 @@ fn clean_input(input: &String) {
         }
     }
 }
+
+fn tokenize(input: &str) -> Vec<GrammarItem> {
+    let mut tokens: Vec<GrammarItem> = vec![];
+    for c in input.chars(){
+        match c {
+            '*' => tokens.push(GrammarItem::Product),
+            '/' => tokens.push(GrammarItem::Divide),
+            '-' => tokens.push(GrammarItem::Minus),
+            '+' => tokens.push(GrammarItem::Sum),
+            ')'|'(' => tokens.push(GrammarItem::Paren),
+            //relies on the fact of a clean input
+            //TODO raise an error message for a invalid inputs
+            _ => tokens.push(GrammarItem::Number(c as u64 - '0' as u64))
+        }
+    }
+    return tokens;
+}
