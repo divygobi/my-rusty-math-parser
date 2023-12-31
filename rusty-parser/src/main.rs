@@ -1,4 +1,4 @@
-use std::{io::{self, stdin, Read}, error};
+use std::{io::{self, stdin, Read}, error, fmt::Error};
 const VALID_CHARS: &str = "0123456789+-*/() ";
 
 #[derive(Debug, Clone)]
@@ -16,7 +16,7 @@ fn main() {
     println!("Please type some input to be parsed");
     match io::stdin().read_line(&mut input){
         Ok(_) => {
-            clean_input(&input);
+            check_input(&input);
         }
         Err(error) => {
             println!("Error; {}", error);
@@ -25,7 +25,7 @@ fn main() {
     println!("Hello, world!");
 }
 
-fn clean_input(input: &String) {
+fn check_input(input: &String) {
     let input = input.trim();
     match input.chars().all(|c| VALID_CHARS.contains(c)){
         true => {
@@ -38,7 +38,7 @@ fn clean_input(input: &String) {
     }
 }
 
-fn tokenize(input: &str) -> Vec<GrammarItem> {
+fn tokenize(input: &str) -> Result<Vec<GrammarItem>, String> {
     let mut tokens: Vec<GrammarItem> = vec![];
     for c in input.chars(){
         match c {
@@ -49,8 +49,12 @@ fn tokenize(input: &str) -> Vec<GrammarItem> {
             ')'|'(' => tokens.push(GrammarItem::Paren),
             //relies on the fact of a clean input
             //TODO raise an error message for a invalid inputs
-            _ => tokens.push(GrammarItem::Number(c as u64 - '0' as u64))
+            '0'..='9' => tokens.push(GrammarItem::Number(c as u64 - '0' as u64)),
+            ' ' => {},
+            _ => {
+                return Err(format!("unexpected character {}", c));
+            }
         }
     }
-    return tokens;
+    Ok(tokens)
 }
