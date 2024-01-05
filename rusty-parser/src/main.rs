@@ -1,5 +1,5 @@
 use core::num;
-use std::{io::{self, stdin, Read}, error, fmt::Error};
+use std::{io::{self, stdin, Read}, error, fmt::Error, vec, collections::vec_deque};
 const VALID_CHARS: &str = "0123456789+-*/() ";
 
 #[derive(Debug, Clone, PartialEq)]
@@ -31,16 +31,34 @@ fn main() {
 
 fn check_input(input: &String) {
     let input = input.trim();
-    match input.chars().all(|c| VALID_CHARS.contains(c)){
-        true => {
-            println!("Your input is {}, and it can be parsed!", input);
-        }
-        false => {
-            println!("Please fix your input");
-            println!("Only the following inputs are valid: {}", VALID_CHARS);
-        }
+    if !input.chars().all(|c| VALID_CHARS.contains(c)) {
+        println!("Please fix your input");
+        println!("Only the following inputs are valid: {}", VALID_CHARS);
+        return;
     }
+
+    //leetcode actually useful in something lmao
+    let mut stack: Vec<char> = vec!();
+    for c in input.chars() {
+        if c == '('{
+            stack.push(')');
+        }
+        else if c == stack[stack.len()-1] {
+            stack.pop();
+        }
+        if !stack.is_empty(){
+            println!("Please fix your input");
+            println!("Make sure your parentheses make sense")
+        }
+
+    }
+
+    println!("Your input is {}, and it can be parsed!", input);
+
 }
+
+
+
 fn tokenize(input: &str) -> Result<Vec<GrammarItem>, String> {
     let mut tokens: Vec<GrammarItem> = vec![];
     let mut num_buffer = String::new();
