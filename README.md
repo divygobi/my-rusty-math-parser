@@ -11,3 +11,5 @@ Credit to https://www.cs.rochester.edu/u/nelson/courses/csc_173/grammars/cfg.htm
 <expression> --> <expression> * <expression>
 <expression> --> <expression> / <expression>
 
+<expression> is a non terminal
+number is a terminal    
